@@ -1,7 +1,7 @@
 name: hkdf
 description: An implementation of the symmetric HMAC-based Key Derivation Function (HKDF) mechanism. (RFC 5869)
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/carlosmakin/hkdf
 
 environment:
   sdk: ^3.2.5

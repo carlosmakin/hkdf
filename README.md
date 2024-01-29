@@ -33,7 +33,7 @@ RFC 5869 details the implementation, usage, and security considerations for HKDF
 
 ```dart
 import 'dart:typed_data';
-import 'package:your_package/hkdf.dart';
+import 'package:hkdf/hkdf.dart';
 
 Uint8List password = ...; // User-provided password
 Uint8List salt = ...; // A unique salt

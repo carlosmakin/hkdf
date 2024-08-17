@@ -25,32 +25,19 @@ abstract class HKDF {
   /// derived keys to be independent and functionally separate in different usage scenarios.
   /// The length of the output key material must not exceed 255 times the hash length.
   static Uint8List expand(Hash hash, Uint8List prk, int length, [Uint8List? info]) {
-    final int hashLen = _getHashLength(hash);
+    final int hashLen = hash.convert(<int>[]).bytes.length;
     if (prk.length < hashLen) throw ArgumentError('PRK length must match or exceed hash length');
     if (length > 255 * hashLen) throw ArgumentError('Requested length exceeds maximum length');
 
-    final BytesBuilder output = BytesBuilder();
+    info ??= Uint8List(0);
     final Hmac hmac = Hmac(hash, prk);
+    final BytesBuilder output = BytesBuilder(copy: false);
+
     List<int> t = <int>[];
-    for (int i = 1; output.length < length; i++) {
-      t = hmac.convert(<int>[...t, if (info != null) ...info, i]).bytes;
+    for (int i = 1; output.length <= length; ++i) {
+      t = hmac.convert(<int>[...t, ...info, i]).bytes;
       output.add(t);
     }
     return output.takeBytes().sublist(0, length);
   }
-}
-
-/// Helper function to determine the hash output length based on hash algorithm.
-int _getHashLength(Hash hashAlgorithm) {
-  return switch (hashAlgorithm) {
-    sha1 => 20,
-    sha224 => 28,
-    sha256 => 32,
-    sha384 => 48,
-    sha512 => 64,
-    sha512224 => 28,
-    sha512256 => 32,
-    md5 => 16,
-    _ => throw ArgumentError('Unsupported hash algorithm')
-  };
 }
